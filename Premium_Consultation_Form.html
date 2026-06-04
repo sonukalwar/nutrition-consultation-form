@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Premium Fitness & Nutrition Consultation</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f5f5f5;max-width:900px;margin:auto;padding:20px}
+.card{background:#fff;padding:24px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.1)}
+.step{display:none}.step.active{display:block}
+input,textarea,select{width:100%;padding:10px;margin:6px 0 14px;border:1px solid #ccc;border-radius:8px}
+button{padding:12px 18px;border:none;border-radius:8px;cursor:pointer}
+.progress{height:10px;background:#ddd;border-radius:10px;margin-bottom:20px}
+.bar{height:10px;background:#222;border-radius:10px;width:20%}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>Fitness & Nutrition Consultation</h1>
+<div class="progress"><div class="bar" id="bar"></div></div>
+
+<form id="f">
+<div class="step active">
+<h2>Step 1 - Personal</h2>
+<input placeholder="Full Name" id="name">
+<input placeholder="Age" id="age">
+<input placeholder="Weight (kg)" id="weight">
+</div>
+
+<div class="step">
+<h2>Step 2 - Medical</h2>
+<textarea id="medical" placeholder="Medical conditions"></textarea>
+<textarea id="medications" placeholder="Current medications"></textarea>
+</div>
+
+<div class="step">
+<h2>Step 3 - Lifestyle</h2>
+<input id="sleep" placeholder="Sleep Hours">
+<input id="stress" placeholder="Stress Level 1-10">
+<textarea id="activities" placeholder="Current Activities"></textarea>
+</div>
+
+<div class="step">
+<h2>Step 4 - Nutrition</h2>
+<input id="meals" placeholder="Meals Per Day">
+<input id="water" placeholder="Water Intake">
+<textarea id="supplements" placeholder="Supplements"></textarea>
+</div>
+
+<div class="step">
+<h2>Step 5 - Goals</h2>
+<textarea id="goals" placeholder="Fitness Goals"></textarea>
+<textarea id="obstacles" placeholder="Obstacles"></textarea>
+</div>
+
+<button type="button" onclick="prev()">Previous</button>
+<button type="button" onclick="next()">Next</button>
+<button type="submit">Submit</button>
+</form>
+<p id="msg"></p>
+</div>
+
+<script>
+const SCRIPT_URL="https://script.google.com/macros/s/AKfycbwtH6sa3-U7kx6tZx4xmj0L-xlbYLbyWjUhH-JMKw1_YinfGi6b9BX0ICfyyPSaEKSzBg/exec";
+let step=0;
+const steps=document.querySelectorAll('.step');
+
+function show(){
+steps.forEach((s,i)=>s.classList.toggle('active',i===step));
+document.getElementById('bar').style.width=((step+1)*20)+'%';
+}
+function next(){if(step<4){step++;show();}}
+function prev(){if(step>0){step--;show();}}
+
+document.getElementById('f').onsubmit=async(e)=>{
+e.preventDefault();
+const payload={
+name:name.value,age:age.value,weight:weight.value,
+medical:medical.value,medications:medications.value,
+sleep:sleep.value,stress:stress.value,
+activities:activities.value,meals:meals.value,
+water:water.value,supplements:supplements.value,
+goals:goals.value,obstacles:obstacles.value
+};
+await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify(payload)});
+msg.innerText='Form submitted successfully';
+};
+</script>
+</body>
+</html>
